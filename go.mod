@@ -2,7 +2,10 @@ module github.com/rythoris/rd
 
 go 1.21.4
 
-require github.com/adrg/xdg v0.4.0
+require (
+	github.com/adrg/xdg v0.4.0
+	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2
+)
 
 require (
 	github.com/alexflint/go-scalar v1.1.0 // indirect

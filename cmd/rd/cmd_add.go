@@ -5,14 +5,12 @@ import (
 	"os"
 	"regexp"
 
+	"github.com/asaskevich/govalidator"
 	"github.com/rythoris/rd"
 	"github.com/rythoris/rd/internal/config"
 )
 
 var (
-	// simple url validator regexp
-	URLRegexp = regexp.MustCompile(`^https?://([-a-z0-9]+\.)*[a-z]{2,6}$`)
-
 	// tags regexp
 	TagRegexp = regexp.MustCompile(`^[a-zA-Z0-9-_/]+$`)
 )
@@ -23,7 +21,7 @@ type AddCommand struct {
 }
 
 func (c AddCommand) Run(config config.Config) int {
-	if !URLRegexp.MatchString(c.Link) {
+	if !govalidator.IsURL(c.Link) {
 		fmt.Fprintf(os.Stderr, "[!] ERROR: invalid url: %s\n", c.Link)
 		return 1
 	}
