@@ -85,19 +85,33 @@ func GetTags(token string) ([]Tag, error) {
 	return resJSON.Items, nil
 }
 
-func CreateRaindrop(token, link string, tags []string) error {
+func CreateRaindrop(token, link string, tags []string) (int, error) {
 	type ReqJSON struct {
 		Link string   `json:"link"`
 		Tags []string `json:"tags"`
 	}
 
-	b, err := json.Marshal(ReqJSON{Link: link, Tags: tags})
-	if err != nil {
-		return fmt.Errorf("json marshal error: %s", err.Error())
+	type ResJSON struct {
+		Item Raindrop `json:"item"`
 	}
 
-	_, err = request(token, "POST", "/raindrop", bytes.NewReader(b))
-	return err
+	b, err := json.Marshal(ReqJSON{Link: link, Tags: tags})
+	if err != nil {
+		return 0, fmt.Errorf("json marshal error: %s", err)
+	}
+
+	b, err = request(token, "POST", "/raindrop", bytes.NewReader(b))
+	if err != nil {
+		return 0, fmt.Errorf("request error: %w", err)
+	}
+
+	var v ResJSON
+	err = json.Unmarshal(b, &v)
+	if err != nil {
+		return 0, fmt.Errorf("unmarshal error: %w", err)
+	}
+
+	return v.Item.ID, err
 }
 
 func RemoveRaindrop(token string, id int) error {

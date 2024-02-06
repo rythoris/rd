@@ -35,9 +35,11 @@ func (c AddCommand) Run(config config.Config) int {
 		}
 	}
 
-	if err := rd.CreateRaindrop(config.Token, c.Link, c.Tags); err != nil {
+	id, err := rd.CreateRaindrop(config.Token, c.Link, c.Tags)
+	if err != nil {
 		fmt.Fprintf(os.Stderr, "[!] ERROR: %s\n", err.Error())
 		return 1
 	}
+	fmt.Printf("%d\n", id)
 	return 0
 }
