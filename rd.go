@@ -167,6 +167,7 @@ func request(token, method, path string, body io.Reader) ([]byte, error) {
 		return nil, fmt.Errorf("http request error: %w", err)
 	}
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token))
+	req.Header.Set("Content-Type", "application/json")
 
 	res, err := client.Do(req)
 	if err != nil {
