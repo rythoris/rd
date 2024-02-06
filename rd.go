@@ -162,7 +162,7 @@ func CreateBackup(token string) error {
 func request(token, method, path string, body io.Reader) ([]byte, error) {
 	var client = http.Client{Timeout: HTTPClientTimeout}
 
-	req, err := http.NewRequest("GET", ApiBaseURL+path, body)
+	req, err := http.NewRequest(method, ApiBaseURL+path, body)
 	if err != nil {
 		return nil, fmt.Errorf("http request error: %w", err)
 	}
