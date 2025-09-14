@@ -54,11 +54,29 @@ type Backup struct {
 }
 
 func GetRaindrops(token string) ([]Raindrop, error) {
+	var all []Raindrop
+
+	for page := 0; ; page++ {
+		result, err := getRaindropPage(token, page)
+		if err != nil {
+			return nil, err
+		}
+		if len(result) == 0 {
+			break // no more pages
+		}
+		all = append(all, result...)
+	}
+
+	return all, nil
+}
+
+func getRaindropPage(token string, page int) ([]Raindrop, error) {
 	type ResJSON struct {
 		Items []Raindrop `json:"items"`
 	}
 
-	body, err := request(token, "GET", "/raindrops/0", http.NoBody)
+	var url = fmt.Sprintf("/raindrops/0?page=%d", page)
+	body, err := request(token, "GET", url, http.NoBody)
 	if err != nil {
 		return nil, err
 	}
@@ -71,6 +89,7 @@ func GetRaindrops(token string) ([]Raindrop, error) {
 
 	return resJSON.Items, nil
 }
+
 
 func GetTags(token string) ([]Tag, error) {
 	type ResJSON struct {
