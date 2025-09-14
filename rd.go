@@ -3,7 +3,6 @@ package rd
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -13,7 +12,14 @@ import (
 const ApiBaseURL = "https://api.raindrop.io/rest/v1"
 const HTTPClientTimeout = time.Second * 5
 
-var APIError = errors.New("unexpected api error (status_code != 200)")
+type APIError struct {
+	StatusCode int
+	Body       string
+}
+
+func (e APIError) Error() string {
+	return fmt.Sprintf("unexpected api error (status_code=%d):\n%s\n", e.StatusCode, e.Body)
+}
 
 type Raindrop struct {
 	ID int `json:"_id"`
@@ -195,7 +201,10 @@ func request(token, method, path string, body io.Reader) ([]byte, error) {
 	}
 
 	if res.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("%w: %s", APIError, string(b))
+		return nil, APIError {
+			StatusCode: res.StatusCode,
+			Body: string(b),
+		}
 	}
 
 	return b, nil
