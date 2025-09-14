@@ -27,18 +27,17 @@ go install -v github.com/rythoris/rd/cmd/rd@latest
 
 Before running the program make sure to create an API token and add it to your [configuration file](#configuration).
 
-## Configuration
+## Quick Start
 
-rd by default uses the [adrg/xdg](https://github.com/adrg/xdg) library for handling the configuration path.
+In order to access the [raindrop.io](https://raindrop.io) API you must create an API token. You can create this token in [App Management Console](https://app.raindrop.io/settings/integrations). Since were not using the complicated oauth system, the test token should be enough for our operations. You can consult the [raindrop.io Official Documentation](https://developer.raindrop.io/v1/authentication/token) for more information.
 
-Here is an example configuration (`$XDG_CONFIG_HOME/rd/config.json`):
-```json
-{
-  "api_token": "your api token"
-}
+After obtaining the API token you can pass the API token using the `RD_RAINDROPIO_TOKEN` environment variables.
+
+```console
+$ RD_RAINDROPIO_TOKEN="YOUR TOKEN HERE" rd list
 ```
 
-The `api-token` is your test token. You can create this token in [App Management Console](https://app.raindrop.io/settings/integrations).
+It's not recommended to save the API token in your shell's `rc` file for security reasons. Instead, consider using a password manager to securely store and manage your API tokens. Additionally, if you need to run a command that includes sensitive information, you can prevent it from being saved in the shell history by placing a space before the command. This way, the command won't be recorded in your history. This feature can be enabled in bash by setting the `HISTCONTROL` environment variable to `ignorespace`, consider reading the `bash(1)` man page for more information.
 
 ## License
 

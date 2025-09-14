@@ -7,7 +7,6 @@ import (
 
 	"github.com/asaskevich/govalidator"
 	"github.com/rythoris/rd"
-	"github.com/rythoris/rd/internal/config"
 )
 
 var (
@@ -20,7 +19,7 @@ type AddCommand struct {
 	Tags []string `arg:"positional" help:"tags"`
 }
 
-func (c AddCommand) Run(config config.Config) int {
+func (c AddCommand) Run(token string) int {
 	if !govalidator.IsURL(c.Link) {
 		fmt.Fprintf(os.Stderr, "[!] ERROR: invalid url: %s\n", c.Link)
 		return 1
@@ -33,7 +32,7 @@ func (c AddCommand) Run(config config.Config) int {
 		}
 	}
 
-	id, err := rd.CreateRaindrop(config.Token, c.Link, c.Tags)
+	id, err := rd.CreateRaindrop(token, c.Link, c.Tags)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "[!] ERROR: %s\n", err.Error())
 		return 1

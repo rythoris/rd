@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/rythoris/rd"
-	"github.com/rythoris/rd/internal/config"
 )
 
 type EditCommand struct {
@@ -14,15 +13,15 @@ type EditCommand struct {
 	Tags    []string `arg:"-t,--tag,separate" help:"tags"`
 }
 
-func (c EditCommand) Run(config config.Config) int {
+func (c EditCommand) Run(token string) int {
 	// if the tags and newlink is empty just delete it.
 	if c.NewLink == "" && len(c.Tags) == 0 {
-		if err := rd.RemoveRaindrop(config.Token, c.ID); err != nil {
+		if err := rd.RemoveRaindrop(token, c.ID); err != nil {
 			fmt.Fprintf(os.Stderr, "[!] ERROR: %s\n", err.Error())
 			return 1
 		}
 	} else {
-		if err := rd.UpdateRaindrop(config.Token, c.ID, c.NewLink, c.Tags); err != nil {
+		if err := rd.UpdateRaindrop(token, c.ID, c.NewLink, c.Tags); err != nil {
 			fmt.Fprintf(os.Stderr, "[!] ERROR: %s\n", err.Error())
 			return 1
 		}

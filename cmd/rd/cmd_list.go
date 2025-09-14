@@ -9,7 +9,6 @@ import (
 	"time"
 
 	"github.com/rythoris/rd"
-	"github.com/rythoris/rd/internal/config"
 )
 
 type ListCommand struct {
@@ -17,8 +16,8 @@ type ListCommand struct {
 	NoHeader bool        `arg:"-n,--no-header" help:"do not print tsv header (only effects the tsv print format)" default:"false"`
 }
 
-func (c ListCommand) Run(config config.Config) int {
-	rds, err := rd.GetRaindrops(config.Token)
+func (c ListCommand) Run(token string) int {
+	rds, err := rd.GetRaindrops(token)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "[!] ERROR: %s\n", err.Error())
 		return 1

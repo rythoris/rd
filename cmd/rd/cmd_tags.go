@@ -5,15 +5,14 @@ import (
 	"os"
 
 	"github.com/rythoris/rd"
-	"github.com/rythoris/rd/internal/config"
 )
 
 type TagsCommand struct {
 	Count bool `arg:"-c,--count" help:"print count of each tag"`
 }
 
-func (c TagsCommand) Run(config config.Config) int {
-	tags, err := rd.GetTags(config.Token)
+func (c TagsCommand) Run(token string) int {
+	tags, err := rd.GetTags(token)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "[!] ERROR: %s\n", err.Error())
 		return 1

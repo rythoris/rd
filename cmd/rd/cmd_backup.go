@@ -11,7 +11,6 @@ import (
 	"github.com/schollz/progressbar/v3"
 
 	"github.com/rythoris/rd"
-	"github.com/rythoris/rd/internal/config"
 )
 
 type BackupCommand struct {
@@ -22,8 +21,8 @@ type BackupCommand struct {
 
 type ListBackupCommand struct{}
 
-func (c ListBackupCommand) Run(config config.Config) int {
-	backups, err := rd.GetBackups(config.Token)
+func (c ListBackupCommand) Run(token string) int {
+	backups, err := rd.GetBackups(token)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "[!] ERROR: %s\n", err.Error())
 		return 1
@@ -41,14 +40,14 @@ type DownloadBackupCommand struct {
 	Format      string `arg:"-f,--format" default:"csv" help:"file format (possible values: csv, html)"`
 }
 
-func (c DownloadBackupCommand) Run(config config.Config) int {
+func (c DownloadBackupCommand) Run(token string) int {
 	if c.Format != "csv" && c.Format != "html" {
 		fmt.Fprintf(os.Stderr, "[!] ERROR: unknown backup format: %s\n", c.Format)
 		fmt.Fprintf(os.Stderr, "[-] Possible values are: html, csv\n")
 		return 1
 	}
 
-	backups, err := rd.GetBackups(config.Token)
+	backups, err := rd.GetBackups(token)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "[!] ERROR: could not get backups: %s\n", err.Error())
 		return 1
@@ -79,7 +78,7 @@ func (c DownloadBackupCommand) Run(config config.Config) int {
 		fmt.Fprintf(os.Stderr, "[!] ERROR: http request error: %s\n", err.Error())
 		return 1
 	}
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", config.Token))
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token))
 	req.Header.Set("Accept-Encoding", "br")
 
 	res, err := client.Do(req)
@@ -114,8 +113,8 @@ func (c DownloadBackupCommand) Run(config config.Config) int {
 
 type CreateBackupCommand struct{}
 
-func (c CreateBackupCommand) Run(config config.Config) int {
-	if err := rd.CreateBackup(config.Token); err != nil {
+func (c CreateBackupCommand) Run(token string) int {
+	if err := rd.CreateBackup(token); err != nil {
 		fmt.Fprintf(os.Stderr, "[!] ERROR: %s\n", err.Error())
 		return 1
 	}

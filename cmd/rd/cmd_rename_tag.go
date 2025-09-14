@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/rythoris/rd"
-	"github.com/rythoris/rd/internal/config"
 )
 
 type RenameTagCommand struct {
@@ -13,8 +12,8 @@ type RenameTagCommand struct {
 	NewTag string `arg:"positional,required" help:"new name for the tag"`
 }
 
-func (c RenameTagCommand) Run(config config.Config) int {
-	if err := rd.RenameTag(config.Token, c.Tag, c.NewTag); err != nil {
+func (c RenameTagCommand) Run(token string) int {
+	if err := rd.RenameTag(token, c.Tag, c.NewTag); err != nil {
 		fmt.Fprintf(os.Stderr, "[!] ERROR: %s\n", err.Error())
 		return 1
 	}

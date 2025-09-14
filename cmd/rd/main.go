@@ -5,8 +5,6 @@ import (
 	"os"
 
 	"github.com/alexflint/go-arg"
-
-	"github.com/rythoris/rd/internal/config"
 )
 
 type Cli struct {
@@ -21,36 +19,34 @@ type Cli struct {
 func main() {
 	var (
 		cli Cli
-		c   config.Config
-		err error
 	)
 
-	c, err = config.ParseConfig()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "[!] ERROR: %s\n", err.Error())
+	token, ok := os.LookupEnv("RD_RAINDROPIO_TOKEN")
+	if !ok {
+		fmt.Fprintf(os.Stderr, "%s: the 'RD_RAINDROPIO_TOKEN' environment variable is not set.\n", os.Args[0])
 		os.Exit(1)
 	}
 
 	p := arg.MustParse(&cli)
 	switch {
 	case cli.List != nil:
-		os.Exit(cli.List.Run(c))
+		os.Exit(cli.List.Run(token))
 	case cli.Add != nil:
-		os.Exit(cli.Add.Run(c))
+		os.Exit(cli.Add.Run(token))
 	case cli.Tags != nil:
-		os.Exit(cli.Tags.Run(c))
+		os.Exit(cli.Tags.Run(token))
 	case cli.RenameTag != nil:
-		os.Exit(cli.RenameTag.Run(c))
+		os.Exit(cli.RenameTag.Run(token))
 	case cli.Edit != nil:
-		os.Exit(cli.Edit.Run(c))
+		os.Exit(cli.Edit.Run(token))
 	case cli.Backup != nil:
 		switch {
 		case cli.Backup.Create != nil:
-			os.Exit(cli.Backup.Create.Run(c))
+			os.Exit(cli.Backup.Create.Run(token))
 		case cli.Backup.Download != nil:
-			os.Exit(cli.Backup.Download.Run(c))
+			os.Exit(cli.Backup.Download.Run(token))
 		case cli.Backup.List != nil:
-			os.Exit(cli.Backup.List.Run(c))
+			os.Exit(cli.Backup.List.Run(token))
 		default:
 			p.WriteHelp(os.Stderr)
 			os.Exit(1)
