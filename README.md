@@ -34,7 +34,7 @@ rd by default uses the [adrg/xdg](https://github.com/adrg/xdg) library for handl
 Here is an example configuration (`$XDG_CONFIG_HOME/rd/config.json`):
 ```json
 {
-  "api-token": "your api token"
+  "api_token": "your api token"
 }
 ```
 
